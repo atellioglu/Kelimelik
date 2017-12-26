@@ -31,6 +31,7 @@ public class Util {
 				mtr[i][j] = ' ';
 			}
 		}
+
 		return mtr;
 	}
 	/**
@@ -39,6 +40,7 @@ public class Util {
 	 * @param columnLength bakilacak maximum kolon uzunlugu
 	 * @return yeni matrix
 	 */
+	
 	public static char[][] shift(char[][] real,int columnLength){
 		
 		char[][] mtr = new char[real.length][real[0].length];

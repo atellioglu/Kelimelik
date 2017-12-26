@@ -33,7 +33,7 @@ public class MapCreator {
 		}
 		
 		System.out.println("Sesli harf sayisi : "+vowelCount);
-		System.out.println("Sessiz harf sayisi :"+ String.valueOf((1000 * 6) - vowelCount));
+		System.out.println("Sessiz harf sayisi :"+ String.valueOf((row * column) - vowelCount));
 		appendSuffixes(totalMatrix);
 		Util.writeMatrix(totalMatrix);
 		
@@ -44,14 +44,14 @@ public class MapCreator {
 		int row = mtr.length;
 		int col = mtr[0].length;
 		Random rnd = new Random();
-		int count = rnd.nextInt(400) + 100;
+		int count = rnd.nextInt(row * col  / 4) + 100;
 		for(int i =0;i<count;i++) {
 			int x = rnd.nextInt(row -4) + 2;
 			int y = rnd.nextInt(col - 6) + 3;
 			int suffixIndex = rnd.nextInt(SUFFIXES.length);
 			int suffixLength = SUFFIXES[suffixIndex].length();
 			String suffix = SUFFIXES[suffixIndex];
-			int mod =rnd.nextInt(5);
+			int mod =rnd.nextInt(7);
 			//modlar ekleri nasil yazdiracagini belirtiyo.
 			switch(mod) {
 			case 0:

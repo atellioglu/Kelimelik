@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by abdullahtellioglu on 11/09/17.
  */
@@ -16,9 +19,13 @@ public class Main {
 			Tree tree = new Tree();
 			tree.setMapCreator(mapCreator);
 			tree.setDictionary(dictionary);
+			long agacOlusturulmaSuresi =0;
+			long agacBitisSuresi = 0;
 			try {
+				System.out.println("Agac olusturuluyor");
+				agacOlusturulmaSuresi = System.currentTimeMillis();
 				tree.create();
-				
+				System.out.println("Agac basariyla olusturuldu");
 				finished = true;
 			} catch (NoMorePathException e) {
 				// e.printStackTrace();
@@ -27,9 +34,13 @@ public class Main {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}finally {
+				agacBitisSuresi = System.currentTimeMillis();
+				Date date = new Date(agacBitisSuresi - agacOlusturulmaSuresi);
+				System.out.println(new SimpleDateFormat("dd:ss").format(date));
+				
 				System.err.println("Maximum derinlik :"+tree.getMaxDepth());
 				System.err.println("Minimum derinlik :"+tree.getMinDepth());
-				sleep(1000);
+				
 			}
 		}
 

@@ -6,6 +6,8 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.Stack;
 
+import exception.NotEnoughDepth;
+
 public class Tree {
 	private Dictionary mDictionary;
 	private MapCreator mMapCreator;
@@ -14,9 +16,9 @@ public class Tree {
 	private int maxDepth = 0;
 	private int minDepth = Integer.MAX_VALUE;
 	private boolean initialized = false;
-	
+	public static final int ENOUGH_DEPTH = 25;
 	public static final int ROW_COLUMN = 6;
-	public static final int LENGTH = 100;
+	public static final int LENGTH = 40;
 	private char[][] totalMatrix = new char[ROW_COLUMN][LENGTH];
 	
 	public Tree() {
@@ -31,33 +33,38 @@ public class Tree {
 		totalMatrix = mMapCreator.generate(ROW_COLUMN, LENGTH);
 		head = new Node(totalMatrix);
 		initialized = true;
+		Util.writeMatrix(totalMatrix);
+		//Main.sleep(1000);
 	}
 	
 	/*
 	 * Bolumleri olusturacak olan yer
 	 */
-	public void create() throws TreeMultipleKeywordException,NoMorePathException{
+	public void create() throws TreeMultipleKeywordException,NoMorePathException,NotEnoughDepth{
 		if(!initialized) {
 			gameMatrixCreate();
 		}
 		nodes.push(head);
 		while(!nodes.isEmpty()) {
 			Node node = nodes.pop();
-			System.out.println("Stack size : "+nodes.size());
-			System.out.println("Removed from last matrix : "+node.removedKeyFromLastMatrix);
+			//System.out.println("Stack size : "+nodes.size());
+			//System.out.println("Removed from last matrix : "+node.removedKeyFromLastMatrix);
 			if(node.mDepth > maxDepth) {
 				maxDepth = node.mDepth;
 			}
 			char[][] subMatrix = Util.subMatrix(node.mtr,ROW_COLUMN);
-			if(containsSpace(subMatrix)) {
-				System.err.println("OYUN SONU");
-				System.out.println();
-				System.out.println(node.mDepth);
-				Util.writeMatrix(subMatrix);
-				System.out.println();
-				Main.sleep(5000);
+			if(containsSpace(subMatrix) || node.mDepth > ENOUGH_DEPTH) {
+				for(int i =0;i<node.olderKeys.size();i++) {
+					//System.out.print(node.olderKeys.get(i)+" ");
+				}
+				//System.out.println(node.key);
+				//System.err.println("OYUN SONU");
+				//System.out.println();
+				//System.out.println(node.mDepth);
+				//Util.writeMatrix(subMatrix);
+				//System.out.println();
+				//Main.sleep(5000);
 			}else {
-
 				PossibilityFinder finder = new PossibilityFinder();
 				finder.setDictionary(mDictionary);
 				Iterator<String> keys = finder.findPossibilities(subMatrix);
@@ -65,9 +72,10 @@ public class Tree {
 					throw new TreeMultipleKeywordException();
 				}
 				if(keys.hasNext()) {
+					
 					while(keys.hasNext()) {
 						String key = keys.next();
-						System.out.println(key);
+						//System.out.println(key);
 						char[][] childMtr = Util.copy(node.mtr);//yeni matrisi kopyaliyo
 						List<PossibilityFinder.CellIndex> indexes = finder.getKeywordIndexes(key);
 						for(int i =0;i<indexes.size();i++) {
@@ -76,13 +84,20 @@ public class Tree {
 						}
 						char[][] childMtrShifted = Util.shift(childMtr);
 						Node child = new Node(childMtrShifted);
+						child.key = key;
+						child.olderKeys.addAll(node.olderKeys);
+						child.olderKeys.add(node.key);
 						child.removedKeyFromLastMatrix = key;
 						child.setDepth(node.mDepth+1);//her birinin derinligi bir artiyor
+						
 						node.children.add(child);
+						
 					}
+
+					
 				}else {
-					if(node.mDepth < minDepth) {
-						minDepth = node.mDepth;
+					if(node.mDepth <ENOUGH_DEPTH) {
+						throw new NotEnoughDepth();
 					}
 					//throw new NoMorePathException();
 				}
@@ -92,6 +107,7 @@ public class Tree {
 			for(int i =0;i<node.children.size();i++) {
 				nodes.add(node.children.get(i));
 			}
+
 		}
 	}
 	public int getMinDepth() {
@@ -115,10 +131,13 @@ public class Tree {
 		int mBeginColumnIndex = 0; 
 		int mDepth;
 		char[][] mtr;
+		private String key;
 		private String removedKeyFromLastMatrix;
+		private ArrayList<String> olderKeys;
 		public Node(char[][] mtr) {
 			children = new ArrayList<>();
 			this.mtr = mtr;
+			olderKeys = new ArrayList<>();
 		}
 		public void setDepth(int depth) {
 			mDepth = depth;
