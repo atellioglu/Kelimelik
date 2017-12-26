@@ -50,7 +50,7 @@ public class Dictionary {
     }
     
     private void handleKeyword(String key){
-        if(key!=null && key.length() >= 4){
+        if(key!=null){
             if(key.split(" ").length == 1){
                 for(int i =1;i<=key.length();i++){
                     subKeys.add(key.substring(0,i));

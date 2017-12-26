@@ -32,7 +32,7 @@ public class PossibilityFinder {
         }
         for(int i =0;i<Tree.ROW_COLUMN;i++){
             for(int j=0;j<Tree.ROW_COLUMN;j++){
-                StackObject stackObject =new StackObject(cells,i,j,"");
+                StackObject stackObject =new StackObject(copy(cells),i,j,"");
                 stackObject.cellIndexList.add(new CellIndex(i,j));
                 mainStack.push(stackObject);
             }
@@ -55,7 +55,6 @@ public class PossibilityFinder {
                     foundKeyIndexes.put(str,stackObject.cellIndexList);
                     //System.out.println("Buldum :" + str);
                 }else if(mDictionary.isSubKey(str)){
-                    mainStack.push(new StackObject(stackObject.cellIndexList,copy(matrix),i+1,j,str));
                     mainStack.push(new StackObject(stackObject.cellIndexList,copy(matrix),i-1,j,str));
                     mainStack.push(new StackObject(stackObject.cellIndexList,copy(matrix),i,j+1,str));
                     mainStack.push(new StackObject(stackObject.cellIndexList,copy(matrix),i,j-1,str));
@@ -63,6 +62,7 @@ public class PossibilityFinder {
                     mainStack.push(new StackObject(stackObject.cellIndexList,copy(matrix),i+1,j-1,str));
                     mainStack.push(new StackObject(stackObject.cellIndexList,copy(matrix),i-1,j+1,str));
                     mainStack.push(new StackObject(stackObject.cellIndexList,copy(matrix),i-1,j-1,str));
+                    mainStack.push(new StackObject(stackObject.cellIndexList,copy(matrix),i+1,j,str));
                 }else{
                     //System.out.println("Kitlendim : "+str);
                 	 
@@ -135,10 +135,25 @@ public class PossibilityFinder {
         }
         return cells;
     }
+    public void write(Cell[][] arr) {
+    		String str1="",str2="";
+    		for(int i =0;i<arr.length;i++) {
+    			for(int j=0;j<arr[0].length;j++) {
+    				str1+=arr[i][j].cr;
+    				str2+=arr[i][j].marked ? '+' : '-';
+    			}
+    		}
+    		System.out.println(str1);
+    		System.out.println(str2);
+    }
     public class Cell{
         char cr;
         boolean marked;
-
+        @Override
+        public String toString() {
+        	// TODO Auto-generated method stub
+        	return cr + (marked ? "+" : "-");
+        }
     }
     public class CellIndex{
         int i,j;
@@ -163,6 +178,7 @@ public class PossibilityFinder {
             this.i = i;
             this.j = j;
         }
+        
     }
 
     private class StackObject{

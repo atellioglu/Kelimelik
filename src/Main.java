@@ -18,14 +18,27 @@ public class Main {
 			tree.setDictionary(dictionary);
 			try {
 				tree.create();
+				
 				finished = true;
 			} catch (NoMorePathException e) {
 				// e.printStackTrace();
 				System.err.println("Baska bolum bulamadim");
+				
 			} catch (Exception e) {
 				e.printStackTrace();
+			}finally {
+				System.err.println("Maximum derinlik :"+tree.getMaxDepth());
+				System.err.println("Minimum derinlik :"+tree.getMinDepth());
+				sleep(1000);
 			}
 		}
 
+	}
+	public static void sleep(long ms) {
+		try {
+			Thread.sleep(ms);
+		}catch(InterruptedException ex) {
+			
+		}
 	}
 }
