@@ -5,8 +5,29 @@ public class MapCreator {
 	public MapCreator(Dictionary dictionary) {
 		mDictionary = dictionary;
 	}
+	
+	
 	public char[][] generate(int row,int column){
 		char[][] totalMatrix = new char[row][column];
+		for (int i = 0; i < totalMatrix.length; i++) {
+			for (int j = 0; j < totalMatrix[0].length; j++) {
+				totalMatrix[i][j] = ' ';
+			}
+		}
+		
+		
+		return totalMatrix;
+	}
+	
+	
+	
+	/*
+	public char[][] generate(int row,int column){
+		char[][] totalMatrix = new char[row][column];
+		
+		
+		return getBahadirinRandomKarakteri(row,column);
+		/*
 		for (int i = 0; i < totalMatrix.length; i++) {
 			for (int j = 0; j < totalMatrix[0].length; j++) {
 				totalMatrix[i][j] = ' ';
@@ -38,6 +59,29 @@ public class MapCreator {
 		Util.writeMatrix(totalMatrix);
 		
 		return totalMatrix;
+	}*/
+	private char[][] getBahadirinRandomKarakteri(int row,int column) {
+		double arr[] = mDictionary.normalizeFrequency;
+		Random rnd = new Random();
+		char[][] mtr = new char[row][column];
+		
+		for(int j=0;j<row;j++) {
+			for(int k=0;k<column;k++) {
+				double db = rnd.nextDouble()*1000;
+				int idx=0;
+				double sum=0;
+				for(int i=0;i<arr.length;i++) {
+					sum+=arr[i];
+					if(sum>db) {
+						idx = i;
+						break;
+					}
+				}
+				mtr[j][k] = mDictionary.LETTERS[idx];
+			}
+			
+		}
+		return mtr;
 	}
 	private static final String[] SUFFIXES = {"MAK","MA","MEK","ME","LUK","CI","CIK","LIK","ÇI","MAZ","Cİ","ÇE","TİK","MAK","MEK"};
 	private int appendSuffixes(char[][] mtr) {
